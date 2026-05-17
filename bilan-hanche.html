@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilan hanche — Anaïs</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --accent: #2b5797;
+    --accent-soft: #e8eff8;
+    --warn: #b8860b;
+    --warn-bg: #fdf6e3;
+    --danger: #a02828;
+    --danger-bg: #fbeaea;
+    --border: #e5e5e2;
+    --success: #2d6a3e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    font-size: 16px;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  header {
+    text-align: center;
+    padding: 24px 16px 8px;
+  }
+  header h1 {
+    margin: 0 0 4px;
+    font-size: 24px;
+    color: var(--accent);
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .intro {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 14px 16px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 18px;
+  }
+  .section h2 {
+    margin: 0 0 4px;
+    font-size: 18px;
+    color: var(--accent);
+  }
+  .section .lead {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0 0 16px;
+  }
+  .question {
+    margin-bottom: 18px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .question:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .question label.q-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 15px;
+  }
+  .hint {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 4px 0 8px;
+    font-style: italic;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .options.horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.15s;
+  }
+  .options label:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+  .options input[type="radio"]:checked + span,
+  .options input[type="checkbox"]:checked + span {
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .options input:checked ~ * {
+    color: var(--accent);
+  }
+  input[type="text"], textarea, input[type="number"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #fafafa;
+  }
+  input[type="text"]:focus, textarea:focus, input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: white;
+  }
+  textarea { min-height: 60px; resize: vertical; }
+  .test {
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .test h3 {
+    margin: 0 0 6px;
+    color: var(--accent);
+    font-size: 15px;
+  }
+  .test .instructions {
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 10px;
+    background: white;
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+  }
+  .test .interpretation {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-style: italic;
+  }
+  .warn {
+    background: var(--warn-bg);
+    border-left: 4px solid var(--warn);
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .danger {
+    background: var(--danger-bg);
+    border-left: 4px solid var(--danger);
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .actions {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg);
+    padding: 16px 0;
+    margin-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover { background: #1f4170; }
+  .btn-secondary {
+    background: white;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    margin-top: 8px;
+  }
+  .btn-secondary:hover { background: var(--accent-soft); }
+  #output {
+    margin-top: 16px;
+    padding: 16px;
+    background: white;
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    display: none;
+  }
+  #output.visible { display: block; }
+  #output-text {
+    width: 100%;
+    min-height: 300px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: "SF Mono", Monaco, Consolas, monospace;
+    font-size: 12px;
+    background: #fafafa;
+    margin-top: 12px;
+  }
+  .copy-status {
+    text-align: center;
+    color: var(--success);
+    font-weight: 600;
+    margin-top: 8px;
+    min-height: 20px;
+  }
+  .schema {
+    text-align: center;
+    margin: 8px 0;
+    font-size: 28px;
+  }
+  details {
+    margin-top: 6px;
+    font-size: 13px;
+  }
+  details summary {
+    cursor: pointer;
+    color: var(--accent);
+    user-select: none;
+  }
+  details[open] summary {
+    margin-bottom: 6px;
+  }
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.3s;
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<div class="container">
+  <header>
+    <h1>🩺 Bilan hanche</h1>
+    <p>Questionnaire diagnostic — Anaïs</p>
+  </header>
+
+  <div class="intro">
+    <strong>Salut Anaïs 👋</strong><br>
+    Ce formulaire sert à préciser l'origine de ta douleur de hanche avant de voir le kiné. Il y a 2 parties :<br><br>
+    <strong>Partie 1 (5 min, toi seule)</strong> : questions sur ta douleur, ton ressenti, ton historique.<br>
+    <strong>Partie 2 (20 min, à 2 avec Valentin)</strong> : 8 tests cliniques simples à faire ensemble.<br><br>
+    À la fin, tu cliques sur "Générer le récap", tu copies le texte, et tu l'envoies à Valentin (Telegram/WhatsApp/SMS). Aucune donnée n'est envoyée nulle part, tout reste sur ton téléphone.
+  </div>
+
+  <form id="form">
+
+    <!-- =============== SECTION 1 : DOULEUR =============== -->
+    <div class="section">
+      <h2>1. Caractérisation de la douleur</h2>
+      <p class="lead">Décris-nous ta douleur le plus précisément possible.</p>
+
+      <div class="question">
+        <label class="q-label">Q1 — Où exactement as-tu mal ? (plusieurs choix possibles)</label>
+        <div class="options">
+          <label><input type="checkbox" name="q1" value="lateral"> <span>Sur le côté de la hanche (au-dessus de l'os saillant)</span></label>
+          <label><input type="checkbox" name="q1" value="antero"> <span>Devant la hanche / pli de l'aine</span></label>
+          <label><input type="checkbox" name="q1" value="profond"> <span>Profond dans l'aine (dans l'articulation)</span></label>
+          <label><input type="checkbox" name="q1" value="fesse"> <span>Dans la fesse</span></label>
+          <label><input type="checkbox" name="q1" value="lombaire"> <span>Bas du dos / lombaires</span></label>
+          <label><input type="checkbox" name="q1" value="cuisse"> <span>Descend dans la cuisse</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q2 — Côté(s) atteint(s) ?</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="q2" value="gauche"> <span>Gauche uniquement</span></label>
+          <label><input type="radio" name="q2" value="droite"> <span>Droite uniquement</span></label>
+          <label><input type="radio" name="q2" value="bilateral_g"> <span>Les deux (gauche en premier)</span></label>
+          <label><input type="radio" name="q2" value="bilateral_d"> <span>Les deux (droite en premier)</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q3 — La douleur te réveille-t-elle la nuit ?</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="q3" value="non"> <span>Non, jamais</span></label>
+          <label><input type="radio" name="q3" value="parfois"> <span>Parfois après une grosse journée</span></label>
+          <label><input type="radio" name="q3" value="souvent"> <span>Souvent / chaque nuit</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q4 — Si tu dors sur le côté douloureux, est-ce que ça fait mal ?</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="q4" value="non"> <span>Non</span></label>
+          <label><input type="radio" name="q4" value="gene"> <span>Gêne légère</span></label>
+          <label><input type="radio" name="q4" value="oui"> <span>Oui, ça fait clairement mal</span></label>
+          <label><input type="radio" name="q4" value="impossible"> <span>Impossible de dormir sur ce côté</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q5 — As-tu une raideur au réveil le matin ? Combien de temps avant de te "dérouiller" ?</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="q5" value="aucune"> <span>Aucune raideur</span></label>
+          <label><input type="radio" name="q5" value="court"> <span>Moins de 15 min</span></label>
+          <label><input type="radio" name="q5" value="moyen"> <span>15 à 30 min</span></label>
+          <label><input type="radio" name="q5" value="long"> <span>Plus de 30 min</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q6 — Quand tu te lèves après être restée assise longtemps (voiture, bureau), as-tu mal pour les premiers pas ?</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="q6" value="non"> <span>Non</span></label>
+          <label><input type="radio" name="q6" value="parfois"> <span>Parfois</span></label>
+          <label><input type="radio" name="q6" value="souvent"> <span>Quasi systématiquement</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q7 — Comment décris-tu ta douleur ? (plusieurs choix)</label>
+        <div class="options">
+          <label><input type="checkbox" name="q7" value="sourde"> <span>Sourde, diffuse</span></label>
+          <label><input type="checkbox" name="q7" value="vive"> <span>Vive, comme un coup de poignard</span></label>
+          <label><input type="checkbox" name="q7" value="brulure"> <span>Brûlure</span></label>
+          <label><input type="checkbox" name="q7" value="lancement"> <span>Élancement, pulsatile</span></label>
+          <label><input type="checkbox" name="q7" value="serrage"> <span>Serrage, étau</span></label>
+          <label><input type="checkbox" name="q7" value="fourmi"> <span>Fourmillements, picotements</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q8 — Intensité de la douleur à son maximum (échelle 0-10) :</label>
+        <p class="hint">0 = pas de douleur, 10 = la pire douleur imaginable</p>
+        <input type="number" name="q8" min="0" max="10" placeholder="Ex: 7">
+      </div>
+    </div>
+
+    <!-- =============== SECTION 2 : MECANIQUE =============== -->
+    <div class="section">
+      <h2>2. Mécanique et déclencheurs</h2>
+      <p class="lead">Comment ton corps réagit dans différentes situations.</p>
+
+      <div class="question">
+        <label class="q-label">Q9 — Entends-tu / sens-tu des claquements, des craquements, des blocages ou des dérobements de la hanche ?</label>
+        <div class="options">
+          <label><input type="radio" name="q9" value="non"> <span>Non, jamais</span></label>
+          <label><input type="radio" name="q9" value="craquement"> <span>Craquements occasionnels sans douleur</span></label>
+          <label><input type="radio" name="q9" value="claquement_douleur"> <span>Claquements avec douleur</span></label>
+          <label><input type="radio" name="q9" value="blocage"> <span>La hanche se bloque parfois</span></label>
+          <label><input type="radio" name="q9" value="derobe"> <span>La jambe se dérobe sous moi</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q10 — As-tu mal quand tu mets tes chaussettes, ou quand tu croises les jambes ?</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="q10" value="non"> <span>Non</span></label>
+          <label><input type="radio" name="q10" value="gene"> <span>Gêne</span></label>
+          <label><input type="radio" name="q10" value="oui"> <span>Oui, clairement</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q11 — Dans les escaliers, qu'est-ce qui réveille le plus la douleur ?</label>
+        <div class="options">
+          <label><input type="radio" name="q11" value="monter"> <span>Monter</span></label>
+          <label><input type="radio" name="q11" value="descendre"> <span>Descendre</span></label>
+          <label><input type="radio" name="q11" value="les_deux"> <span>Les deux pareil</span></label>
+          <label><input type="radio" name="q11" value="aucun"> <span>Ni l'un ni l'autre</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q12 — As-tu une différence de longueur de jambes connue ?</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="q12" value="non"> <span>Non / pas connu</span></label>
+          <label><input type="radio" name="q12" value="oui"> <span>Oui</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q13 — Position assise habituelle : croises-tu toujours les jambes du même côté ?</label>
+        <div class="options">
+          <label><input type="radio" name="q13" value="non"> <span>Non, jamais</span></label>
+          <label><input type="radio" name="q13" value="gauche"> <span>Oui, gauche sur droite</span></label>
+          <label><input type="radio" name="q13" value="droite"> <span>Oui, droite sur gauche</span></label>
+          <label><input type="radio" name="q13" value="varie"> <span>Ça varie</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q14 — Posture en voiture : ton siège est plutôt bas/incliné en arrière, ou redressé ?</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="q14" value="bas"> <span>Bas / incliné</span></label>
+          <label><input type="radio" name="q14" value="droit"> <span>Redressé</span></label>
+          <label><input type="radio" name="q14" value="moyen"> <span>Intermédiaire</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- =============== SECTION 3 : CONTEXTE =============== -->
+    <div class="section">
+      <h2>3. Contexte général</h2>
+      <p class="lead">Pour écarter les causes systémiques.</p>
+
+      <div class="question">
+        <label class="q-label">Q15 — Cycles menstruels : réguliers ?</label>
+        <div class="options">
+          <label><input type="radio" name="q15" value="reguliers"> <span>Oui, réguliers</span></label>
+          <label><input type="radio" name="q15" value="irreguliers"> <span>Irréguliers</span></label>
+          <label><input type="radio" name="q15" value="absents"> <span>Absents depuis &gt; 3 mois (hors grossesse)</span></label>
+          <label><input type="radio" name="q15" value="pilule"> <span>Sous contraception qui les supprime</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q16 — Antécédents personnels (plusieurs choix) :</label>
+        <div class="options">
+          <label><input type="checkbox" name="q16" value="luxation"> <span>Luxation congénitale de hanche (bébé)</span></label>
+          <label><input type="checkbox" name="q16" value="fracture"> <span>Fracture du bassin ou de la jambe</span></label>
+          <label><input type="checkbox" name="q16" value="entorses"> <span>Entorses de cheville récurrentes</span></label>
+          <label><input type="checkbox" name="q16" value="dos"> <span>Problème de dos chronique (hernie, scoliose...)</span></label>
+          <label><input type="checkbox" name="q16" value="chute"> <span>Chute importante récente</span></label>
+          <label><input type="checkbox" name="q16" value="aucun"> <span>Aucun</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q17 — Famille (parents, frères/sœurs) : antécédents connus ?</label>
+        <div class="options">
+          <label><input type="checkbox" name="q17" value="arthrose"> <span>Arthrose précoce (avant 50 ans)</span></label>
+          <label><input type="checkbox" name="q17" value="dysplasie"> <span>Dysplasie de hanche</span></label>
+          <label><input type="checkbox" name="q17" value="prothese"> <span>Prothèse de hanche</span></label>
+          <label><input type="checkbox" name="q17" value="aucun"> <span>Rien de connu</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q18 — Alimentation : tu fais 3 repas/jour réguliers ? Tu te sens souvent fatiguée ?</label>
+        <textarea name="q18" placeholder="Ex: oui 3 repas, mais souvent fatiguée le matin..."></textarea>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q19 — Es-tu en sous-poids ou en perte de poids récente non voulue ?</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="q19" value="non"> <span>Non</span></label>
+          <label><input type="radio" name="q19" value="oui"> <span>Oui</span></label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-label">Q20 — Y a-t-il quelque chose d'autre que tu veux ajouter ? (ressenti, contexte, infos médicales)</label>
+        <textarea name="q20" placeholder="Tout ce qui te semble utile..."></textarea>
+      </div>
+    </div>
+
+    <!-- =============== SECTION 4 : TESTS CLINIQUES =============== -->
+    <div class="section">
+      <h2>4. Tests cliniques (à faire avec Valentin)</h2>
+      <p class="lead">8 tests à enchaîner. Comptez 15-20 min. Tenue souple, pieds nus, pièce calme.</p>
+
+      <div class="warn">
+        <strong>⚠️ Avant de commencer</strong><br>
+        Si un test reproduit une douleur très forte (&gt; 7/10), <strong>arrêtez immédiatement</strong> et notez-le. Notez aussi si tu ressens un blocage, une faiblesse soudaine, ou une sensation anormale.
+      </div>
+
+      <!-- TEST 1 -->
+      <div class="test">
+        <h3>Test 1 — Palpation du grand trochanter</h3>
+        <div class="instructions">
+          <strong>Comment :</strong> Anaïs debout ou allongée sur le côté sain. Valentin appuie fermement (avec le pouce ou les jointures) sur l'os saillant sur le côté de la hanche, et juste au-dessus. Fais les deux côtés.
+        </div>
+        <label class="q-label">Résultat à gauche :</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="t1_g" value="indolore"> <span>Indolore</span></label>
+          <label><input type="radio" name="t1_g" value="sensible"> <span>Sensible</span></label>
+          <label><input type="radio" name="t1_g" value="douloureux"> <span>Très douloureux</span></label>
+        </div>
+        <label class="q-label" style="margin-top:8px;">Résultat à droite :</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="t1_d" value="indolore"> <span>Indolore</span></label>
+          <label><input type="radio" name="t1_d" value="sensible"> <span>Sensible</span></label>
+          <label><input type="radio" name="t1_d" value="douloureux"> <span>Très douloureux</span></label>
+        </div>
+        <div class="interpretation">→ Une douleur reproductible vive ici est un argument fort pour le syndrome douloureux du grand trochanter (GTPS).</div>
+      </div>
+
+      <!-- TEST 2 -->
+      <div class="test">
+        <h3>Test 2 — Trendelenburg (équilibre sur une jambe)</h3>
+        <div class="instructions">
+          <strong>Comment :</strong> Anaïs debout pieds nus, mains sur les hanches. Lève un pied (genou plié à 90°) et tiens 30 secondes. Valentin regarde de DERRIÈRE :
+          <ul style="margin: 6px 0 0 0; padding-left: 20px;">
+            <li>Le bassin reste-t-il horizontal ?</li>
+            <li>Tombe-t-il du côté de la jambe levée (= test positif) ?</li>
+            <li>Le tronc se penche-t-il vers la jambe d'appui (compensation) ?</li>
+          </ul>
+          Fais les 2 côtés.
+        </div>
+        <label class="q-label">Appui sur jambe gauche (jambe droite levée) :</label>
+        <div class="options">
+          <label><input type="radio" name="t2_g" value="ok"> <span>Bassin reste horizontal, stable 30s</span></label>
+          <label><input type="radio" name="t2_g" value="chute"> <span>Le bassin tombe du côté droit</span></label>
+          <label><input type="radio" name="t2_g" value="compense"> <span>Le tronc se penche vers la gauche pour compenser</span></label>
+          <label><input type="radio" name="t2_g" value="douleur"> <span>Douleur au bout de quelques secondes</span></label>
+          <label><input type="radio" name="t2_g" value="impossible"> <span>Impossible de tenir 30s</span></label>
+        </div>
+        <label class="q-label" style="margin-top:10px;">Appui sur jambe droite (jambe gauche levée) :</label>
+        <div class="options">
+          <label><input type="radio" name="t2_d" value="ok"> <span>Bassin reste horizontal, stable 30s</span></label>
+          <label><input type="radio" name="t2_d" value="chute"> <span>Le bassin tombe du côté gauche</span></label>
+          <label><input type="radio" name="t2_d" value="compense"> <span>Le tronc se penche vers la droite pour compenser</span></label>
+          <label><input type="radio" name="t2_d" value="douleur"> <span>Douleur au bout de quelques secondes</span></label>
+          <label><input type="radio" name="t2_d" value="impossible"> <span>Impossible de tenir 30s</span></label>
+        </div>
+        <div class="interpretation">→ Chute du bassin ou compensation = insuffisance du moyen fessier côté appui.</div>
+      </div>
+
+      <!-- TEST 3 -->
+      <div class="test">
+        <h3>Test 3 — Single-leg squat (squat sur une jambe)</h3>
+        <div class="instructions">
+          <strong>Comment :</strong> Anaïs debout sur une jambe, l'autre légèrement levée devant. Fait 3 squats lents (descendre à 30-45°, pas en profondeur). <strong>Valentin filme de face avec le téléphone</strong> pour analyser.
+          Observe :
+          <ul style="margin: 6px 0 0 0; padding-left: 20px;">
+            <li>Le genou rentre-t-il vers l'intérieur (valgus dynamique) ?</li>
+            <li>Le bassin chute-t-il du côté opposé ?</li>
+            <li>Le tronc se penche-t-il ?</li>
+          </ul>
+        </div>
+        <label class="q-label">Côté gauche (appui jambe gauche) :</label>
+        <div class="options">
+          <label><input type="checkbox" name="t3_g" value="genou_dedans"> <span>Le genou rentre vers l'intérieur</span></label>
+          <label><input type="checkbox" name="t3_g" value="bassin_chute"> <span>Le bassin chute du côté opposé</span></label>
+          <label><input type="checkbox" name="t3_g" value="tronc"> <span>Le tronc se penche</span></label>
+          <label><input type="checkbox" name="t3_g" value="douleur"> <span>Douleur pendant le mouvement</span></label>
+          <label><input type="checkbox" name="t3_g" value="ok"> <span>Mouvement propre et contrôlé</span></label>
+        </div>
+        <label class="q-label" style="margin-top:10px;">Côté droit (appui jambe droite) :</label>
+        <div class="options">
+          <label><input type="checkbox" name="t3_d" value="genou_dedans"> <span>Le genou rentre vers l'intérieur</span></label>
+          <label><input type="checkbox" name="t3_d" value="bassin_chute"> <span>Le bassin chute du côté opposé</span></label>
+          <label><input type="checkbox" name="t3_d" value="tronc"> <span>Le tronc se penche</span></label>
+          <label><input type="checkbox" name="t3_d" value="douleur"> <span>Douleur pendant le mouvement</span></label>
+          <label><input type="checkbox" name="t3_d" value="ok"> <span>Mouvement propre et contrôlé</span></label>
+        </div>
+        <div class="interpretation">→ Valgus + chute du bassin = défaut de contrôle moteur de la chaîne lombo-pelvienne. Très fréquent chez les sédentaires.</div>
+      </div>
+
+      <!-- TEST 4 -->
+      <div class="test">
+        <h3>Test 4 — FADIR (conflit fémoro-acétabulaire / labrum)</h3>
+        <div class="instructions">
+          <strong>Comment :</strong> Anaïs allongée sur le dos. Valentin fléchit sa hanche à 90° (genou vers la poitrine), puis ramène le genou vers l'épaule opposée (adduction) tout en tournant doucement la cheville vers l'extérieur (rotation interne de la hanche). <strong>Va lentement et arrête au premier inconfort.</strong>
+        </div>
+        <label class="q-label">Côté gauche :</label>
+        <div class="options">
+          <label><input type="radio" name="t4_g" value="indolore"> <span>Indolore</span></label>
+          <label><input type="radio" name="t4_g" value="aine"> <span>Douleur PROFONDE dans l'aine</span></label>
+          <label><input type="radio" name="t4_g" value="lateral"> <span>Douleur sur le côté de la hanche</span></label>
+          <label><input type="radio" name="t4_g" value="raideur"> <span>Raide mais pas douloureux</span></label>
+        </div>
+        <label class="q-label" style="margin-top:8px;">Côté droit :</label>
+        <div class="options">
+          <label><input type="radio" name="t4_d" value="indolore"> <span>Indolore</span></label>
+          <label><input type="radio" name="t4_d" value="aine"> <span>Douleur PROFONDE dans l'aine</span></label>
+          <label><input type="radio" name="t4_d" value="lateral"> <span>Douleur sur le côté de la hanche</span></label>
+          <label><input type="radio" name="t4_d" value="raideur"> <span>Raide mais pas douloureux</span></label>
+        </div>
+        <div class="interpretation">→ Douleur profonde inguinale = suspicion conflit fémoro-acétabulaire ou lésion du labrum (à confirmer par imagerie si positif).</div>
+      </div>
+
+      <!-- TEST 5 -->
+      <div class="test">
+        <h3>Test 5 — FABER (Patrick) — sacro-iliaque et hanche</h3>
+        <div class="instructions">
+          <strong>Comment :</strong> Anaïs allongée sur le dos. Elle plie la jambe à tester et pose la cheville sur le genou opposé (position "chiffre 4"). Valentin pose une main sur l'autre hanche (pour stabiliser le bassin) et appuie doucement sur le genou plié vers le sol.
+        </div>
+        <label class="q-label">Côté gauche (cheville gauche sur genou droit) :</label>
+        <div class="options">
+          <label><input type="radio" name="t5_g" value="indolore"> <span>Indolore, genou descend bien</span></label>
+          <label><input type="radio" name="t5_g" value="aine"> <span>Douleur inguinale</span></label>
+          <label><input type="radio" name="t5_g" value="sacro"> <span>Douleur en bas du dos / sacro-iliaque</span></label>
+          <label><input type="radio" name="t5_g" value="bloque"> <span>Genou bloqué en haut, ne descend pas</span></label>
+        </div>
+        <label class="q-label" style="margin-top:8px;">Côté droit :</label>
+        <div class="options">
+          <label><input type="radio" name="t5_d" value="indolore"> <span>Indolore, genou descend bien</span></label>
+          <label><input type="radio" name="t5_d" value="aine"> <span>Douleur inguinale</span></label>
+          <label><input type="radio" name="t5_d" value="sacro"> <span>Douleur en bas du dos / sacro-iliaque</span></label>
+          <label><input type="radio" name="t5_d" value="bloque"> <span>Genou bloqué en haut, ne descend pas</span></label>
+        </div>
+        <div class="interpretation">→ Douleur inguinale = pathologie intra-articulaire. Douleur lombaire = dysfonction sacro-iliaque.</div>
+      </div>
+
+      <!-- TEST 6 -->
+      <div class="test">
+        <h3>Test 6 — Ober (rétraction de la bandelette ilio-tibiale)</h3>
+        <div class="instructions">
+          <strong>Comment :</strong> Anaïs allongée sur le côté SAIN, jambe du dessous bien fléchie. Valentin plie son genou du dessus à 90°, lui fait faire une extension de hanche (jambe alignée avec le tronc), puis lâche doucement la jambe vers le sol. Anaïs doit RESTER RELÂCHÉE.
+        </div>
+        <label class="q-label">Côté gauche (allongée sur la droite) :</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="t6_g" value="ok"> <span>Jambe descend jusqu'à toucher le sol</span></label>
+          <label><input type="radio" name="t6_g" value="moyen"> <span>Descend partiellement</span></label>
+          <label><input type="radio" name="t6_g" value="bloquee"> <span>Reste bloquée en l'air</span></label>
+        </div>
+        <label class="q-label" style="margin-top:8px;">Côté droit (allongée sur la gauche) :</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="t6_d" value="ok"> <span>Jambe descend jusqu'à toucher le sol</span></label>
+          <label><input type="radio" name="t6_d" value="moyen"> <span>Descend partiellement</span></label>
+          <label><input type="radio" name="t6_d" value="bloquee"> <span>Reste bloquée en l'air</span></label>
+        </div>
+        <div class="interpretation">→ Jambe bloquée en l'air = bandelette ilio-tibiale rétractée (très fréquent chez les sédentaires).</div>
+      </div>
+
+      <!-- TEST 7 -->
+      <div class="test">
+        <h3>Test 7 — Piriforme</h3>
+        <div class="instructions">
+          <strong>Comment :</strong> Anaïs allongée sur le dos, hanche et genou pliés à environ 60°. Valentin pousse le genou vers l'intérieur (adduction) tout en bloquant la cheville avec son autre main pour résister à une rotation externe.
+        </div>
+        <label class="q-label">Côté gauche :</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="t7_g" value="non"> <span>Pas de douleur</span></label>
+          <label><input type="radio" name="t7_g" value="fesse"> <span>Douleur dans la fesse profonde</span></label>
+          <label><input type="radio" name="t7_g" value="irradiation"> <span>Douleur qui irradie dans la jambe</span></label>
+        </div>
+        <label class="q-label" style="margin-top:8px;">Côté droit :</label>
+        <div class="options horizontal">
+          <label><input type="radio" name="t7_d" value="non"> <span>Pas de douleur</span></label>
+          <label><input type="radio" name="t7_d" value="fesse"> <span>Douleur dans la fesse profonde</span></label>
+          <label><input type="radio" name="t7_d" value="irradiation"> <span>Douleur qui irradie dans la jambe</span></label>
+        </div>
+        <div class="interpretation">→ Douleur fesse profonde = syndrome du piriforme. Irradiation = compression nerveuse possible.</div>
+      </div>
+
+      <!-- TEST 8 -->
+      <div class="test">
+        <h3>Test 8 — Saut sur une jambe (dépistage fracture de stress)</h3>
+        <div class="danger">
+          <strong>⚠️ ATTENTION</strong> : NE FAIS PAS ce test si tu as une douleur très forte au repos ou en marchant aujourd'hui. Si tu hésites, saute ce test et coche "non testé".
+        </div>
+        <div class="instructions">
+          <strong>Comment :</strong> Anaïs debout sur une jambe, fait 3 petits sauts verticaux (10-15 cm de hauteur, sur place). Fais les deux côtés si c'est tolérable.
+        </div>
+        <label class="q-label">Côté gauche :</label>
+        <div class="options">
+          <label><input type="radio" name="t8_g" value="ok"> <span>Aucune douleur</span></label>
+          <label><input type="radio" name="t8_g" value="legere"> <span>Douleur légère sur le côté de la hanche</span></label>
+          <label><input type="radio" name="t8_g" value="forte"> <span>Douleur forte (notamment dans l'aine)</span></label>
+          <label><input type="radio" name="t8_g" value="non_teste"> <span>Non testé (trop douloureux ou hésitation)</span></label>
+        </div>
+        <label class="q-label" style="margin-top:8px;">Côté droit :</label>
+        <div class="options">
+          <label><input type="radio" name="t8_d" value="ok"> <span>Aucune douleur</span></label>
+          <label><input type="radio" name="t8_d" value="legere"> <span>Douleur légère sur le côté de la hanche</span></label>
+          <label><input type="radio" name="t8_d" value="forte"> <span>Douleur forte (notamment dans l'aine)</span></label>
+          <label><input type="radio" name="t8_d" value="non_teste"> <span>Non testé</span></label>
+        </div>
+        <div class="interpretation">→ Douleur inguinale forte au saut = drapeau rouge potentiel pour fracture de stress du col fémoral. Imagerie nécessaire.</div>
+      </div>
+
+      <!-- Observations libres -->
+      <div class="question" style="margin-top: 20px;">
+        <label class="q-label">Observations libres pendant les tests (sensation, ressenti, contexte)</label>
+        <textarea name="t_libre" placeholder="Tout ce qui te semble pertinent..."></textarea>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-primary" onclick="generateAndSend()">📤 Générer et envoyer à Valentin</button>
+      <button type="button" class="btn-secondary" onclick="generateReportOnly()">👁️ Voir le récap sans envoyer</button>
+    </div>
+
+  </form>
+
+  <div id="output">
+    <h2 style="margin-top:0; color: var(--accent);">✅ Récap</h2>
+    <p style="font-size: 14px; color: var(--muted);" id="output-help">Voici ton bilan. Tu peux le relire et l'envoyer à Valentin.</p>
+    <textarea id="output-text" readonly></textarea>
+    <button class="btn-primary" onclick="sendToTelegram()">📤 Envoyer à Valentin</button>
+    <button class="btn-secondary" onclick="copyReport()">📋 Copier le texte (au cas où)</button>
+    <p class="copy-status" id="copy-status"></p>
+  </div>
+
+</div>
+
+<script>
+  // ============================================================
+  //  CONFIGURATION ntfy.sh
+  //  Topic obscur — change-le ici (et dans le bookmark/app
+  //  ntfy de Valentin) si tu veux faire tourner les clés.
+  // ============================================================
+  const NTFY_TOPIC = "bilan-anais-h4n7Kp9xR3vM";
+  const NTFY_URL   = `https://ntfy.sh/${NTFY_TOPIC}`;
+  // ============================================================
+
+  const form = document.getElementById('form');
+  const progress = document.getElementById('progress');
+
+  function updateProgress() {
+    const inputs = form.querySelectorAll('input, textarea');
+    const total = new Set();
+    const filled = new Set();
+    inputs.forEach(el => {
+      total.add(el.name);
+      if ((el.type === 'radio' || el.type === 'checkbox') && el.checked) filled.add(el.name);
+      else if ((el.type === 'text' || el.type === 'number' || el.tagName === 'TEXTAREA') && el.value.trim()) filled.add(el.name);
+    });
+    const pct = Math.round((filled.size / total.size) * 100);
+    progress.style.width = pct + '%';
+  }
+  form.addEventListener('input', updateProgress);
+  form.addEventListener('change', updateProgress);
+
+  // Labels for human-readable output
+  const labels = {
+    q1: { lateral: "côté hanche (au-dessus de l'os saillant)", antero: "devant / pli de l'aine", profond: "profond dans l'aine", fesse: "dans la fesse", lombaire: "lombaires", cuisse: "irradie dans la cuisse" },
+    q2: { gauche: "Gauche", droite: "Droite", bilateral_g: "Bilatéral (gauche en 1er)", bilateral_d: "Bilatéral (droite en 1er)" },
+    q3: { non: "Non, jamais", parfois: "Parfois après grosse journée", souvent: "Souvent / chaque nuit" },
+    q4: { non: "Non", gene: "Gêne légère", oui: "Oui, clairement", impossible: "Impossible" },
+    q5: { aucune: "Aucune", court: "< 15 min", moyen: "15-30 min", long: "> 30 min" },
+    q6: { non: "Non", parfois: "Parfois", souvent: "Quasi systématique" },
+    q7: { sourde: "sourde", vive: "vive", brulure: "brûlure", lancement: "élancement", serrage: "serrage", fourmi: "fourmillements" },
+    q9: { non: "Non", craquement: "Craquements sans douleur", claquement_douleur: "Claquements avec douleur", blocage: "Blocages", derobe: "Jambe se dérobe" },
+    q10: { non: "Non", gene: "Gêne", oui: "Oui clairement" },
+    q11: { monter: "Monter", descendre: "Descendre", les_deux: "Les deux", aucun: "Aucun" },
+    q12: { non: "Non/inconnu", oui: "Oui" },
+    q13: { non: "Non", gauche: "Gauche/droite", droite: "Droite/gauche", varie: "Varie" },
+    q14: { bas: "Bas/incliné", droit: "Redressé", moyen: "Intermédiaire" },
+    q15: { reguliers: "Réguliers", irreguliers: "Irréguliers", absents: "Absents > 3 mois", pilule: "Supprimés par contraception" },
+    q16: { luxation: "luxation congénitale", fracture: "fracture bassin/jambe", entorses: "entorses cheville récurrentes", dos: "problème de dos chronique", chute: "chute importante récente", aucun: "aucun" },
+    q17: { arthrose: "arthrose précoce", dysplasie: "dysplasie de hanche", prothese: "prothèse de hanche", aucun: "rien" },
+    q19: { non: "Non", oui: "Oui" },
+    t_palp: { indolore: "indolore", sensible: "sensible", douloureux: "TRÈS DOULOUREUX" },
+    t_trend: { ok: "stable 30s", chute: "bassin tombe (Trendelenburg+)", compense: "compensation tronc", douleur: "douleur", impossible: "impossible 30s" },
+    t_sls: { genou_dedans: "valgus genou", bassin_chute: "chute bassin opposé", tronc: "inclinaison tronc", douleur: "douleur", ok: "OK" },
+    t_fadir: { indolore: "indolore", aine: "douleur PROFONDE inguinale (+)", lateral: "douleur latérale", raideur: "raide non douloureux" },
+    t_faber: { indolore: "indolore", aine: "douleur inguinale", sacro: "douleur sacro-iliaque (+)", bloque: "bloqué en haut" },
+    t_ober: { ok: "descend au sol (OK)", moyen: "descend partiellement", bloquee: "bloquée en l'air (rétraction)" },
+    t_piri: { non: "pas de douleur", fesse: "douleur fesse profonde (+)", irradiation: "irradiation jambe" },
+    t_saut: { ok: "indolore", legere: "douleur légère latérale", forte: "douleur FORTE (RED FLAG?)", non_teste: "non testé" }
+  };
+
+  function getRadio(name) {
+    const el = form.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : null;
+  }
+  function getCheckboxes(name) {
+    return Array.from(form.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
+  }
+  function getText(name) {
+    const el = form.querySelector(`[name="${name}"]`);
+    return el && el.value.trim() ? el.value.trim() : null;
+  }
+
+  function fmt(value, dict) {
+    if (!value) return "_(non renseigné)_";
+    return dict[value] || value;
+  }
+  function fmtMulti(values, dict) {
+    if (!values || values.length === 0) return "_(non renseigné)_";
+    return values.map(v => dict[v] || v).join(", ");
+  }
+
+  function buildReport() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+
+    let r = `# 🩺 BILAN HANCHE — ANAÏS\n`;
+    r += `_Rempli le ${dateStr}_\n\n`;
+    r += `---\n\n`;
+
+    // SECTION 1
+    r += `## 1. Caractérisation de la douleur\n\n`;
+    r += `- **Localisation** : ${fmtMulti(getCheckboxes('q1'), labels.q1)}\n`;
+    r += `- **Côté(s)** : ${fmt(getRadio('q2'), labels.q2)}\n`;
+    r += `- **Douleur nocturne** : ${fmt(getRadio('q3'), labels.q3)}\n`;
+    r += `- **Dormir sur le côté douloureux** : ${fmt(getRadio('q4'), labels.q4)}\n`;
+    r += `- **Raideur matinale** : ${fmt(getRadio('q5'), labels.q5)}\n`;
+    r += `- **Douleur après position assise prolongée** : ${fmt(getRadio('q6'), labels.q6)}\n`;
+    r += `- **Type de douleur** : ${fmtMulti(getCheckboxes('q7'), labels.q7)}\n`;
+    r += `- **Intensité max (0-10)** : ${getText('q8') || "_(non renseigné)_"}\n\n`;
+
+    // SECTION 2
+    r += `## 2. Mécanique\n\n`;
+    r += `- **Claquements/blocages** : ${fmt(getRadio('q9'), labels.q9)}\n`;
+    r += `- **Chaussettes / jambes croisées** : ${fmt(getRadio('q10'), labels.q10)}\n`;
+    r += `- **Escaliers (déclencheur)** : ${fmt(getRadio('q11'), labels.q11)}\n`;
+    r += `- **Différence longueur jambes** : ${fmt(getRadio('q12'), labels.q12)}\n`;
+    r += `- **Croisement habituel jambes** : ${fmt(getRadio('q13'), labels.q13)}\n`;
+    r += `- **Posture voiture** : ${fmt(getRadio('q14'), labels.q14)}\n\n`;
+
+    // SECTION 3
+    r += `## 3. Contexte général\n\n`;
+    r += `- **Cycles menstruels** : ${fmt(getRadio('q15'), labels.q15)}\n`;
+    r += `- **Antécédents perso** : ${fmtMulti(getCheckboxes('q16'), labels.q16)}\n`;
+    r += `- **Antécédents familiaux** : ${fmtMulti(getCheckboxes('q17'), labels.q17)}\n`;
+    r += `- **Alimentation/fatigue** : ${getText('q18') || "_(non renseigné)_"}\n`;
+    r += `- **Sous-poids / perte involontaire** : ${fmt(getRadio('q19'), labels.q19)}\n`;
+    r += `- **Notes libres** : ${getText('q20') || "_(rien)_"}\n\n`;
+
+    // SECTION 4
+    r += `## 4. Tests cliniques\n\n`;
+    r += `| Test | Gauche | Droite |\n`;
+    r += `|------|--------|--------|\n`;
+    r += `| T1 — Palpation trochanter | ${fmt(getRadio('t1_g'), labels.t_palp)} | ${fmt(getRadio('t1_d'), labels.t_palp)} |\n`;
+    r += `| T2 — Trendelenburg | ${fmt(getRadio('t2_g'), labels.t_trend)} | ${fmt(getRadio('t2_d'), labels.t_trend)} |\n`;
+    r += `| T3 — Single-leg squat | ${fmtMulti(getCheckboxes('t3_g'), labels.t_sls)} | ${fmtMulti(getCheckboxes('t3_d'), labels.t_sls)} |\n`;
+    r += `| T4 — FADIR | ${fmt(getRadio('t4_g'), labels.t_fadir)} | ${fmt(getRadio('t4_d'), labels.t_fadir)} |\n`;
+    r += `| T5 — FABER | ${fmt(getRadio('t5_g'), labels.t_faber)} | ${fmt(getRadio('t5_d'), labels.t_faber)} |\n`;
+    r += `| T6 — Ober | ${fmt(getRadio('t6_g'), labels.t_ober)} | ${fmt(getRadio('t6_d'), labels.t_ober)} |\n`;
+    r += `| T7 — Piriforme | ${fmt(getRadio('t7_g'), labels.t_piri)} | ${fmt(getRadio('t7_d'), labels.t_piri)} |\n`;
+    r += `| T8 — Saut sur une jambe | ${fmt(getRadio('t8_g'), labels.t_saut)} | ${fmt(getRadio('t8_d'), labels.t_saut)} |\n\n`;
+
+    const obs = getText('t_libre');
+    if (obs) r += `**Observations libres** : ${obs}\n\n`;
+
+    // Auto-flags
+    r += `---\n\n## 🚩 Drapeaux automatiques\n\n`;
+    const flags = [];
+    if (getRadio('q3') === 'souvent') flags.push("⚠️ Douleur nocturne fréquente (composante inflammatoire à explorer)");
+    if (getRadio('q15') === 'absents') flags.push("🚩 Aménorrhée + sport intense = risque RED-S / fracture de stress");
+    if (getRadio('t8_g') === 'forte' || getRadio('t8_d') === 'forte') flags.push("🚩 Test du saut positif (douleur forte) — exclure fracture de stress, IRM recommandée");
+    if (getRadio('q19') === 'oui') flags.push("⚠️ Perte de poids involontaire — signe systémique à explorer");
+    if (getRadio('q9') === 'blocage') flags.push("⚠️ Blocages articulaires — suspicion labrum ou corps étranger");
+    if (getRadio('q9') === 'derobe') flags.push("⚠️ Dérobements — insuffisance neuromusculaire ou structure");
+
+    if (flags.length === 0) {
+      r += `_Aucun drapeau rouge automatique détecté._\n`;
+    } else {
+      flags.forEach(f => r += `- ${f}\n`);
+    }
+
+    r += `\n---\n_Bilan généré le ${dateStr}._\n`;
+
+    return r;
+  }
+
+  function showReport(text) {
+    document.getElementById('output-text').value = text;
+    document.getElementById('output').classList.add('visible');
+    document.getElementById('output').scrollIntoView({behavior: 'smooth'});
+  }
+
+  function generateReportOnly() {
+    const text = buildReport();
+    showReport(text);
+    document.getElementById('output-help').textContent =
+      "Voici ton bilan. Si tu es prête, clique 'Envoyer à Valentin'.";
+  }
+
+  async function generateAndSend() {
+    const text = buildReport();
+    showReport(text);
+    await sendToTelegram();
+  }
+
+  async function sendToTelegram() {
+    // Le nom de la fonction est conservé pour ne pas casser les boutons existants
+    // mais le canal réel est ntfy.sh.
+    const status = document.getElementById('copy-status');
+    const text = document.getElementById('output-text').value;
+
+    if (!text) {
+      status.style.color = '#a02828';
+      status.textContent = '❌ Génère d\'abord le récap.';
+      return;
+    }
+
+    status.style.color = '#6b6b6b';
+    status.textContent = '⏳ Envoi en cours...';
+
+    try {
+      // Petit résumé pour le titre/notif (drapeaux rouges si présents)
+      const flagsMatch = text.match(/## 🚩 Drapeaux automatiques\n\n([\s\S]*?)(?:\n---|\n_Bilan)/);
+      let preview = "Bilan complet reçu";
+      if (flagsMatch && flagsMatch[1] && !flagsMatch[1].includes("Aucun drapeau")) {
+        preview = "⚠️ Bilan reçu — drapeaux détectés";
+      }
+
+      // ntfy.sh limite ~4KB en body texte simple.
+      // On envoie le markdown comme fichier joint (header Filename),
+      // ce qui contourne la limite et Valentin reçoit un .md téléchargeable.
+      const now = new Date();
+      const stamp = now.toISOString().slice(0,10).replace(/-/g,'') + '_' +
+                    now.toTimeString().slice(0,5).replace(':','');
+      const filename = `bilan-hanche-anais-${stamp}.md`;
+
+      const res = await fetch(NTFY_URL, {
+        method: 'POST',
+        headers: {
+          'Title': '🩺 Bilan hanche d\'Anaïs',
+          'Message': preview,
+          'Tags': 'hospital,memo',
+          'Priority': 'high',
+          'Filename': filename
+        },
+        body: text
+      });
+
+      if (res.ok) {
+        status.style.color = '#2d6a3e';
+        status.textContent = '✅ Envoyé à Valentin ! Tu peux fermer la page.';
+      } else {
+        throw new Error('HTTP ' + res.status);
+      }
+    } catch (err) {
+      status.style.color = '#a02828';
+      status.textContent = '❌ Échec d\'envoi : ' + err.message + '. Utilise "Copier" et colle-le-moi dans un message.';
+    }
+  }
+
+  function copyReport() {
+    const ta = document.getElementById('output-text');
+    ta.select();
+    ta.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(ta.value).then(() => {
+      const status = document.getElementById('copy-status');
+      status.style.color = '#2d6a3e';
+      status.textContent = '✅ Copié ! Tu peux le coller dans un message.';
+      setTimeout(() => { status.textContent = ''; }, 4000);
+    }).catch(() => {
+      document.execCommand('copy');
+      document.getElementById('copy-status').textContent = '✅ Copié !';
+    });
+  }
+
+  // Helper conservé au cas où (non utilisé par défaut)
+  function shareReport() {
+    const text = document.getElementById('output-text').value;
+    if (navigator.share) {
+      navigator.share({
+        title: 'Bilan hanche - Anaïs',
+        text: text
+      }).catch(() => {});
+    } else {
+      document.getElementById('copy-status').textContent = '❌ Partage natif indisponible, utilise "Copier" à la place.';
+    }
+  }
+</script>
+</body>
+</html>
