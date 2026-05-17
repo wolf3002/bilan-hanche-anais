@@ -284,9 +284,10 @@
   <div class="intro">
     <strong>Salut Anaïs 👋</strong><br>
     Ce formulaire sert à préciser l'origine de ta douleur de hanche avant de voir le kiné. Il y a 2 parties :<br><br>
-    <strong>Partie 1 (5 min, toi seule)</strong> : questions sur ta douleur, ton ressenti, ton historique.<br>
-    <strong>Partie 2 (20 min, à 2 avec Valentin)</strong> : 8 tests cliniques simples à faire ensemble.<br><br>
-    À la fin, tu cliques sur "Générer le récap", tu copies le texte, et tu l'envoies à Valentin (Telegram/WhatsApp/SMS). Aucune donnée n'est envoyée nulle part, tout reste sur ton téléphone.
+    <strong>Partie 1 (5 min)</strong> : questions sur ta douleur, ton ressenti, ton historique.<br>
+    <strong>Partie 2 (20-30 min)</strong> : 8 tests cliniques simples. Tu peux les faire <strong>seule</strong> (avec ton téléphone qui filme pour certains) ou <strong>avec n'importe qui à côté</strong> (parent, ami, collègue) — pas besoin que ce soit Valentin.<br><br>
+    À la fin, tu cliques sur <strong>"Envoyer à Valentin"</strong> : ton bilan lui arrive en notification directement. Tout reste privé.<br><br>
+    💡 <strong>À chaque question, si aucun choix ne te convient ou si tu veux préciser quelque chose, utilise le champ "Précisions / autre" en bas de chaque section.</strong>
   </div>
 
   <form id="form">
@@ -373,6 +374,12 @@
         <p class="hint">0 = pas de douleur, 10 = la pire douleur imaginable</p>
         <input type="number" name="q8" min="0" max="10" placeholder="Ex: 7">
       </div>
+
+      <div class="question">
+        <label class="q-label">📝 Précisions / autre (section douleur)</label>
+        <p class="hint">Si une réponse ne te convenait pas, ou si tu veux ajouter quelque chose sur ta douleur, écris-le ici.</p>
+        <textarea name="precisions_1" placeholder="Exemple : 'La douleur Q1 est plutôt vers le creux du fessier, pas exactement sur le côté'..."></textarea>
+      </div>
     </div>
 
     <!-- =============== SECTION 2 : MECANIQUE =============== -->
@@ -436,6 +443,12 @@
           <label><input type="radio" name="q14" value="moyen"> <span>Intermédiaire</span></label>
         </div>
       </div>
+
+      <div class="question">
+        <label class="q-label">📝 Précisions / autre (section mécanique)</label>
+        <p class="hint">Si une réponse ne te convenait pas, ou si tu veux ajouter un mouvement/contexte qui déclenche la douleur, écris-le ici.</p>
+        <textarea name="precisions_2" placeholder="Exemple : 'Ça me fait aussi mal quand je porte mon sac à dos longtemps'..."></textarea>
+      </div>
     </div>
 
     <!-- =============== SECTION 3 : CONTEXTE =============== -->
@@ -489,26 +502,29 @@
       </div>
 
       <div class="question">
-        <label class="q-label">Q20 — Y a-t-il quelque chose d'autre que tu veux ajouter ? (ressenti, contexte, infos médicales)</label>
+        <label class="q-label">📝 Précisions / autre (section contexte) — Q20</label>
+        <p class="hint">Si une réponse ne te convenait pas, ou si tu veux ajouter du ressenti, du contexte, ou des infos médicales (traitements actuels, allergies, autre douleur), écris-le ici.</p>
         <textarea name="q20" placeholder="Tout ce qui te semble utile..."></textarea>
       </div>
     </div>
 
     <!-- =============== SECTION 4 : TESTS CLINIQUES =============== -->
     <div class="section">
-      <h2>4. Tests cliniques (à faire avec Valentin)</h2>
-      <p class="lead">8 tests à enchaîner. Comptez 15-20 min. Tenue souple, pieds nus, pièce calme.</p>
+      <h2>4. Tests cliniques (seule ou avec quelqu'un)</h2>
+      <p class="lead">8 tests simples à enchaîner. Compte 20-30 min. Tenue souple, pieds nus, pièce calme. Garde ton téléphone près de toi : pour les tests T2 et T3, tu vas l'utiliser pour te filmer.</p>
 
       <div class="warn">
         <strong>⚠️ Avant de commencer</strong><br>
-        Si un test reproduit une douleur très forte (&gt; 7/10), <strong>arrêtez immédiatement</strong> et notez-le. Notez aussi si tu ressens un blocage, une faiblesse soudaine, ou une sensation anormale.
+        Si un test reproduit une douleur très forte (&gt; 7/10), <strong>arrête immédiatement</strong> et note-le dans le champ "Précisions" du test. Note aussi si tu ressens un blocage, une faiblesse soudaine, ou une sensation anormale.<br><br>
+        Pour les tests qui sont plus simples à 2 (T4, T5, T6, T7), il y a une version <em>seule</em> détaillée. Mais si quelqu'un peut t'aider (juste pour bouger doucement ta jambe ou observer), c'est mieux.
       </div>
 
       <!-- TEST 1 -->
       <div class="test">
         <h3>Test 1 — Palpation du grand trochanter</h3>
         <div class="instructions">
-          <strong>Comment :</strong> Anaïs debout ou allongée sur le côté sain. Valentin appuie fermement (avec le pouce ou les jointures) sur l'os saillant sur le côté de la hanche, et juste au-dessus. Fais les deux côtés.
+          <strong>Comment (seule) :</strong> Assise ou allongée sur le côté sain. Avec ton pouce ou tes jointures, appuie fermement sur l'os saillant que tu sens sur le côté de la hanche, et juste au-dessus. Insiste pendant 5 sec. Note si la pression reproduit ta douleur habituelle. Fais les deux côtés.<br>
+          <strong>Avec quelqu'un :</strong> la personne appuie pour toi, ce qui permet une pression plus uniforme.
         </div>
         <label class="q-label">Résultat à gauche :</label>
         <div class="options horizontal">
@@ -529,13 +545,17 @@
       <div class="test">
         <h3>Test 2 — Trendelenburg (équilibre sur une jambe)</h3>
         <div class="instructions">
-          <strong>Comment :</strong> Anaïs debout pieds nus, mains sur les hanches. Lève un pied (genou plié à 90°) et tiens 30 secondes. Valentin regarde de DERRIÈRE :
+          <strong>Comment (seule, avec un miroir OU ton téléphone qui filme) :</strong><br>
+          1. Place-toi pieds nus, dos à un miroir en pied OU pose ton téléphone à 2m derrière toi en mode vidéo (calé contre un mur ou un objet, à hauteur du bassin).<br>
+          2. Mains sur les hanches, lève un pied (genou plié à 90°) et tiens 30 secondes.<br>
+          3. Regarde dans le miroir (ou la vidéo après) :
           <ul style="margin: 6px 0 0 0; padding-left: 20px;">
             <li>Le bassin reste-t-il horizontal ?</li>
             <li>Tombe-t-il du côté de la jambe levée (= test positif) ?</li>
-            <li>Le tronc se penche-t-il vers la jambe d'appui (compensation) ?</li>
+            <li>Le tronc se penche-t-il vers la jambe d'appui pour compenser ?</li>
           </ul>
-          Fais les 2 côtés.
+          Fais les 2 côtés.<br>
+          <strong>Avec quelqu'un :</strong> la personne se place derrière toi et observe directement, c'est plus précis.
         </div>
         <label class="q-label">Appui sur jambe gauche (jambe droite levée) :</label>
         <div class="options">
@@ -560,13 +580,18 @@
       <div class="test">
         <h3>Test 3 — Single-leg squat (squat sur une jambe)</h3>
         <div class="instructions">
-          <strong>Comment :</strong> Anaïs debout sur une jambe, l'autre légèrement levée devant. Fait 3 squats lents (descendre à 30-45°, pas en profondeur). <strong>Valentin filme de face avec le téléphone</strong> pour analyser.
-          Observe :
+          <strong>Comment (seule, avec ton téléphone qui filme) :</strong><br>
+          1. Pose ton téléphone à 2-3m de toi, calé contre un mur, à hauteur des genoux, en mode vidéo. Cadre-le sur tes jambes/bassin.<br>
+          2. Place-toi de face. Sur une jambe, l'autre légèrement levée devant.<br>
+          3. Fais 3 squats lents (descends à 30-45°, pas en profondeur). Tu peux t'aider d'un doigt sur un mur pour l'équilibre sans tricher avec le bras.<br>
+          4. Refais l'autre côté.<br>
+          5. Regarde la vidéo après. Sur la jambe d'appui :
           <ul style="margin: 6px 0 0 0; padding-left: 20px;">
             <li>Le genou rentre-t-il vers l'intérieur (valgus dynamique) ?</li>
-            <li>Le bassin chute-t-il du côté opposé ?</li>
-            <li>Le tronc se penche-t-il ?</li>
+            <li>Le bassin chute-t-il du côté opposé (côté de la jambe levée) ?</li>
+            <li>Le tronc se penche-t-il vers la jambe d'appui ?</li>
           </ul>
+          <strong>Avec quelqu'un :</strong> la personne te filme ou observe directement de face.
         </div>
         <label class="q-label">Côté gauche (appui jambe gauche) :</label>
         <div class="options">
@@ -591,7 +616,14 @@
       <div class="test">
         <h3>Test 4 — FADIR (conflit fémoro-acétabulaire / labrum)</h3>
         <div class="instructions">
-          <strong>Comment :</strong> Anaïs allongée sur le dos. Valentin fléchit sa hanche à 90° (genou vers la poitrine), puis ramène le genou vers l'épaule opposée (adduction) tout en tournant doucement la cheville vers l'extérieur (rotation interne de la hanche). <strong>Va lentement et arrête au premier inconfort.</strong>
+          <strong>Comment (seule) :</strong><br>
+          1. Allongée sur le dos, sur un lit ou un tapis.<br>
+          2. Avec tes deux mains, attrape ton genou et ramène-le vers ta poitrine (flexion à 90°).<br>
+          3. Continue avec tes mains : tire le genou en diagonale vers ton épaule opposée (= adduction).<br>
+          4. En même temps, fais doucement pivoter ta cheville vers l'extérieur (= rotation interne de la hanche).<br>
+          5. <strong>Va très lentement et arrête au premier inconfort ou tension.</strong> Note où tu sens la douleur si elle apparaît.<br>
+          6. Refais l'autre côté.<br>
+          <strong>Avec quelqu'un :</strong> la personne fait le mouvement à ta place pendant que tu restes relâchée, c'est plus précis.
         </div>
         <label class="q-label">Côté gauche :</label>
         <div class="options">
@@ -614,7 +646,13 @@
       <div class="test">
         <h3>Test 5 — FABER (Patrick) — sacro-iliaque et hanche</h3>
         <div class="instructions">
-          <strong>Comment :</strong> Anaïs allongée sur le dos. Elle plie la jambe à tester et pose la cheville sur le genou opposé (position "chiffre 4"). Valentin pose une main sur l'autre hanche (pour stabiliser le bassin) et appuie doucement sur le genou plié vers le sol.
+          <strong>Comment (seule) :</strong><br>
+          1. Allongée sur le dos.<br>
+          2. Plie la jambe à tester et pose la cheville sur ton genou opposé (position "chiffre 4" — comme quand on s'assoit en croisant).<br>
+          3. Avec une main, appuie doucement sur le genou plié vers le sol. Avec l'autre main, stabilise la hanche opposée en appuyant sur la crête iliaque.<br>
+          4. Note : à quelle hauteur ton genou descend-il ? Y a-t-il une douleur, et si oui, où exactement (aine ? bas du dos ?) ?<br>
+          5. Refais l'autre côté.<br>
+          <strong>Avec quelqu'un :</strong> la personne appuie sur le genou pour toi, tu peux mieux te concentrer sur ce que tu ressens.
         </div>
         <label class="q-label">Côté gauche (cheville gauche sur genou droit) :</label>
         <div class="options">
@@ -633,11 +671,17 @@
         <div class="interpretation">→ Douleur inguinale = pathologie intra-articulaire. Douleur lombaire = dysfonction sacro-iliaque.</div>
       </div>
 
-      <!-- TEST 6 -->
+      <!-- TEST 6 — version Ober modifié pour solo -->
       <div class="test">
-        <h3>Test 6 — Ober (rétraction de la bandelette ilio-tibiale)</h3>
+        <h3>Test 6 — Ober modifié (rétraction de la bandelette ilio-tibiale)</h3>
         <div class="instructions">
-          <strong>Comment :</strong> Anaïs allongée sur le côté SAIN, jambe du dessous bien fléchie. Valentin plie son genou du dessus à 90°, lui fait faire une extension de hanche (jambe alignée avec le tronc), puis lâche doucement la jambe vers le sol. Anaïs doit RESTER RELÂCHÉE.
+          <strong>Comment (seule, version Ober modifié) :</strong><br>
+          1. Allongée sur le côté SAIN (= côté qui ne fait pas mal), bord d'un lit, hanche du dessous fléchie.<br>
+          2. La jambe à tester (celle du dessus) : tends-la dans le prolongement de ton tronc (légère extension de hanche).<br>
+          3. Sans forcer, laisse simplement ta jambe tendue retomber vers le sol par gravité (en restant relâchée).<br>
+          4. Observe : ta jambe descend-elle naturellement sous l'horizontale, ou reste-t-elle bloquée en l'air ?<br>
+          5. Refais l'autre côté.<br>
+          <strong>Avec quelqu'un :</strong> la personne maintient ton bassin pour qu'il ne bascule pas, et accompagne doucement la descente de la jambe.
         </div>
         <label class="q-label">Côté gauche (allongée sur la droite) :</label>
         <div class="options horizontal">
@@ -658,7 +702,13 @@
       <div class="test">
         <h3>Test 7 — Piriforme</h3>
         <div class="instructions">
-          <strong>Comment :</strong> Anaïs allongée sur le dos, hanche et genou pliés à environ 60°. Valentin pousse le genou vers l'intérieur (adduction) tout en bloquant la cheville avec son autre main pour résister à une rotation externe.
+          <strong>Comment (seule) :</strong><br>
+          1. Allongée sur le dos. Plie ta hanche et ton genou à environ 60° (genou pointé vers le plafond, pas trop ramené à toi).<br>
+          2. Avec ta main du même côté, pousse ton genou vers l'intérieur (vers le côté opposé de ton corps).<br>
+          3. Maintiens la pression 10 secondes en augmentant doucement la force.<br>
+          4. Note si tu ressens une douleur profonde dans la fesse, ou une irradiation qui descend dans la jambe.<br>
+          5. Refais l'autre côté.<br>
+          <strong>Avec quelqu'un :</strong> la personne pousse ton genou et bloque ta cheville pour une résistance plus précise.
         </div>
         <label class="q-label">Côté gauche :</label>
         <div class="options horizontal">
@@ -682,7 +732,7 @@
           <strong>⚠️ ATTENTION</strong> : NE FAIS PAS ce test si tu as une douleur très forte au repos ou en marchant aujourd'hui. Si tu hésites, saute ce test et coche "non testé".
         </div>
         <div class="instructions">
-          <strong>Comment :</strong> Anaïs debout sur une jambe, fait 3 petits sauts verticaux (10-15 cm de hauteur, sur place). Fais les deux côtés si c'est tolérable.
+          <strong>Comment :</strong> Debout sur une jambe, près d'un mur si besoin pour l'équilibre. Fais 3 petits sauts verticaux (10-15 cm de hauteur, sur place). Fais les deux côtés si c'est tolérable.
         </div>
         <label class="q-label">Côté gauche :</label>
         <div class="options">
@@ -703,8 +753,9 @@
 
       <!-- Observations libres -->
       <div class="question" style="margin-top: 20px;">
-        <label class="q-label">Observations libres pendant les tests (sensation, ressenti, contexte)</label>
-        <textarea name="t_libre" placeholder="Tout ce qui te semble pertinent..."></textarea>
+        <label class="q-label">📝 Précisions / observations sur les tests</label>
+        <p class="hint">Pour préciser un test (ex : "au test 4, j'ai senti un blocage à mi-chemin"), ajouter une sensation inhabituelle, ou si une réponse ne te convenait pas → écris-le ici. Indique le numéro du test (T1 à T8) si possible.</p>
+        <textarea name="t_libre" placeholder="Exemple : 'T2 gauche - j'ai senti que mon dos partait sur la droite pour compenser. T6 droite - j'avais peur de me déséquilibrer.'"></textarea>
       </div>
     </div>
 
@@ -821,7 +872,10 @@
     r += `- **Raideur matinale** : ${fmt(getRadio('q5'), labels.q5)}\n`;
     r += `- **Douleur après position assise prolongée** : ${fmt(getRadio('q6'), labels.q6)}\n`;
     r += `- **Type de douleur** : ${fmtMulti(getCheckboxes('q7'), labels.q7)}\n`;
-    r += `- **Intensité max (0-10)** : ${getText('q8') || "_(non renseigné)_"}\n\n`;
+    r += `- **Intensité max (0-10)** : ${getText('q8') || "_(non renseigné)_"}\n`;
+    const p1 = getText('precisions_1');
+    if (p1) r += `- **📝 Précisions** : ${p1}\n`;
+    r += `\n`;
 
     // SECTION 2
     r += `## 2. Mécanique\n\n`;
@@ -830,7 +884,10 @@
     r += `- **Escaliers (déclencheur)** : ${fmt(getRadio('q11'), labels.q11)}\n`;
     r += `- **Différence longueur jambes** : ${fmt(getRadio('q12'), labels.q12)}\n`;
     r += `- **Croisement habituel jambes** : ${fmt(getRadio('q13'), labels.q13)}\n`;
-    r += `- **Posture voiture** : ${fmt(getRadio('q14'), labels.q14)}\n\n`;
+    r += `- **Posture voiture** : ${fmt(getRadio('q14'), labels.q14)}\n`;
+    const p2 = getText('precisions_2');
+    if (p2) r += `- **📝 Précisions** : ${p2}\n`;
+    r += `\n`;
 
     // SECTION 3
     r += `## 3. Contexte général\n\n`;
@@ -839,7 +896,7 @@
     r += `- **Antécédents familiaux** : ${fmtMulti(getCheckboxes('q17'), labels.q17)}\n`;
     r += `- **Alimentation/fatigue** : ${getText('q18') || "_(non renseigné)_"}\n`;
     r += `- **Sous-poids / perte involontaire** : ${fmt(getRadio('q19'), labels.q19)}\n`;
-    r += `- **Notes libres** : ${getText('q20') || "_(rien)_"}\n\n`;
+    r += `- **📝 Précisions / autre** : ${getText('q20') || "_(rien)_"}\n\n`;
 
     // SECTION 4
     r += `## 4. Tests cliniques\n\n`;
@@ -855,7 +912,7 @@
     r += `| T8 — Saut sur une jambe | ${fmt(getRadio('t8_g'), labels.t_saut)} | ${fmt(getRadio('t8_d'), labels.t_saut)} |\n\n`;
 
     const obs = getText('t_libre');
-    if (obs) r += `**Observations libres** : ${obs}\n\n`;
+    if (obs) r += `**📝 Précisions sur les tests** : ${obs}\n\n`;
 
     // Auto-flags
     r += `---\n\n## 🚩 Drapeaux automatiques\n\n`;
