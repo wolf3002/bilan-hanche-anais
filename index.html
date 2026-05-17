@@ -321,12 +321,11 @@
 
   <div class="intro">
     <strong>Salut Anaïs 👋</strong><br>
-    Ce formulaire sert à préciser l'origine de ta douleur de hanche avant de voir le kiné. Il y a 2 parties :<br><br>
-    <strong>Partie 1 (5 min)</strong> : questions sur ta douleur, ton ressenti, ton historique.<br>
-    <strong>Partie 2 (20-30 min)</strong> : 8 tests cliniques simples. Tu peux les faire <strong>seule</strong> (avec ton téléphone qui filme pour certains) ou <strong>avec n'importe qui à côté</strong> (parent, ami, collègue) — pas besoin que ce soit Valentin.<br><br>
+    Ce formulaire sert à préciser l'origine de ta douleur de hanche avant de voir le kiné.<br><br>
+    <strong>Durée :</strong> ~5-10 min. Tu réponds à 20 questions sur ta douleur, ton ressenti, ton historique.<br><br>
     À la fin, tu cliques sur <strong>"Envoyer à Valentin"</strong> : ton bilan lui arrive en notification directement. Tout reste privé.<br><br>
     💡 <strong>À chaque question, si aucun choix ne te convient ou si tu veux préciser quelque chose, utilise le champ "Précisions / autre" en bas de chaque section.</strong><br><br>
-    💾 <strong>Tes réponses sont sauvegardées automatiquement</strong> sur ton téléphone : tu peux fermer la page, changer d'onglet, revenir plus tard — tout est conservé. Quand tu cliques "Envoyer à Valentin", le brouillon reste aussi (au cas où il faudrait corriger).
+    💾 <strong>Tes réponses sont sauvegardées automatiquement</strong> sur ton téléphone : tu peux fermer la page, changer d'onglet, revenir plus tard — tout est conservé.
   </div>
 
   <form id="form">
@@ -548,7 +547,12 @@
     </div>
 
     <!-- =============== SECTION 4 : TESTS CLINIQUES =============== -->
-    <div class="section">
+    <!--
+      Section désactivée car Anaïs ne peut pas faire les tests actuellement.
+      Pour réactiver : changer ENABLE_TESTS_SECTION à true dans le bloc JS.
+      Le contenu est conservé intact pour réutilisation future.
+    -->
+    <div class="section" id="section-tests">
       <h2>4. Tests cliniques (seule ou avec quelqu'un)</h2>
       <p class="lead">8 tests simples à enchaîner. Compte 20-30 min. Tenue souple, pieds nus, pièce calme. Garde ton téléphone près de toi : pour les tests T2 et T3, tu vas l'utiliser pour te filmer.</p>
 
@@ -830,19 +834,35 @@
   const NTFY_URL   = `https://ntfy.sh/${NTFY_TOPIC}`;
   // ============================================================
 
+  // ============================================================
+  //  TOGGLE SECTION TESTS CLINIQUES
+  //  Passe à `true` quand Anaïs pourra faire les tests (T1-T8).
+  //  La section, sa contribution au récap et ses drapeaux
+  //  automatiques sont gérés via ce seul drapeau.
+  // ============================================================
+  const ENABLE_TESTS_SECTION = false;
+  // ============================================================
+
   const form = document.getElementById('form');
   const progress = document.getElementById('progress');
+
+  function isFieldActive(el) {
+    // Un champ situé dans la section tests désactivée ne compte pas
+    if (!ENABLE_TESTS_SECTION && el.closest('#section-tests')) return false;
+    return true;
+  }
 
   function updateProgress() {
     const inputs = form.querySelectorAll('input, textarea');
     const total = new Set();
     const filled = new Set();
     inputs.forEach(el => {
+      if (!isFieldActive(el)) return;
       total.add(el.name);
       if ((el.type === 'radio' || el.type === 'checkbox') && el.checked) filled.add(el.name);
       else if ((el.type === 'text' || el.type === 'number' || el.tagName === 'TEXTAREA') && el.value.trim()) filled.add(el.name);
     });
-    const pct = Math.round((filled.size / total.size) * 100);
+    const pct = total.size === 0 ? 0 : Math.round((filled.size / total.size) * 100);
     progress.style.width = pct + '%';
   }
   form.addEventListener('input', () => { updateProgress(); scheduleAutoSave(); });
@@ -941,28 +961,34 @@
     r += `- **Sous-poids / perte involontaire** : ${fmt(getRadio('q19'), labels.q19)}\n`;
     r += `- **📝 Précisions / autre** : ${getText('q20') || "_(rien)_"}\n\n`;
 
-    // SECTION 4
-    r += `## 4. Tests cliniques\n\n`;
-    r += `| Test | Gauche | Droite |\n`;
-    r += `|------|--------|--------|\n`;
-    r += `| T1 — Palpation trochanter | ${fmt(getRadio('t1_g'), labels.t_palp)} | ${fmt(getRadio('t1_d'), labels.t_palp)} |\n`;
-    r += `| T2 — Trendelenburg | ${fmt(getRadio('t2_g'), labels.t_trend)} | ${fmt(getRadio('t2_d'), labels.t_trend)} |\n`;
-    r += `| T3 — Single-leg squat | ${fmtMulti(getCheckboxes('t3_g'), labels.t_sls)} | ${fmtMulti(getCheckboxes('t3_d'), labels.t_sls)} |\n`;
-    r += `| T4 — FADIR | ${fmt(getRadio('t4_g'), labels.t_fadir)} | ${fmt(getRadio('t4_d'), labels.t_fadir)} |\n`;
-    r += `| T5 — FABER | ${fmt(getRadio('t5_g'), labels.t_faber)} | ${fmt(getRadio('t5_d'), labels.t_faber)} |\n`;
-    r += `| T6 — Ober | ${fmt(getRadio('t6_g'), labels.t_ober)} | ${fmt(getRadio('t6_d'), labels.t_ober)} |\n`;
-    r += `| T7 — Piriforme | ${fmt(getRadio('t7_g'), labels.t_piri)} | ${fmt(getRadio('t7_d'), labels.t_piri)} |\n`;
-    r += `| T8 — Saut sur une jambe | ${fmt(getRadio('t8_g'), labels.t_saut)} | ${fmt(getRadio('t8_d'), labels.t_saut)} |\n\n`;
+    // SECTION 4 — tests cliniques (conditionnel)
+    if (ENABLE_TESTS_SECTION) {
+      r += `## 4. Tests cliniques\n\n`;
+      r += `| Test | Gauche | Droite |\n`;
+      r += `|------|--------|--------|\n`;
+      r += `| T1 — Palpation trochanter | ${fmt(getRadio('t1_g'), labels.t_palp)} | ${fmt(getRadio('t1_d'), labels.t_palp)} |\n`;
+      r += `| T2 — Trendelenburg | ${fmt(getRadio('t2_g'), labels.t_trend)} | ${fmt(getRadio('t2_d'), labels.t_trend)} |\n`;
+      r += `| T3 — Single-leg squat | ${fmtMulti(getCheckboxes('t3_g'), labels.t_sls)} | ${fmtMulti(getCheckboxes('t3_d'), labels.t_sls)} |\n`;
+      r += `| T4 — FADIR | ${fmt(getRadio('t4_g'), labels.t_fadir)} | ${fmt(getRadio('t4_d'), labels.t_fadir)} |\n`;
+      r += `| T5 — FABER | ${fmt(getRadio('t5_g'), labels.t_faber)} | ${fmt(getRadio('t5_d'), labels.t_faber)} |\n`;
+      r += `| T6 — Ober | ${fmt(getRadio('t6_g'), labels.t_ober)} | ${fmt(getRadio('t6_d'), labels.t_ober)} |\n`;
+      r += `| T7 — Piriforme | ${fmt(getRadio('t7_g'), labels.t_piri)} | ${fmt(getRadio('t7_d'), labels.t_piri)} |\n`;
+      r += `| T8 — Saut sur une jambe | ${fmt(getRadio('t8_g'), labels.t_saut)} | ${fmt(getRadio('t8_d'), labels.t_saut)} |\n\n`;
 
-    const obs = getText('t_libre');
-    if (obs) r += `**📝 Précisions sur les tests** : ${obs}\n\n`;
+      const obs = getText('t_libre');
+      if (obs) r += `**📝 Précisions sur les tests** : ${obs}\n\n`;
+    } else {
+      r += `## 4. Tests cliniques\n\n_Non réalisés pour le moment (à compléter ultérieurement avec un kiné ou en autonomie)._\n\n`;
+    }
 
     // Auto-flags
     r += `---\n\n## 🚩 Drapeaux automatiques\n\n`;
     const flags = [];
     if (getRadio('q3') === 'souvent') flags.push("⚠️ Douleur nocturne fréquente (composante inflammatoire à explorer)");
     if (getRadio('q15') === 'absents') flags.push("🚩 Aménorrhée + sport intense = risque RED-S / fracture de stress");
-    if (getRadio('t8_g') === 'forte' || getRadio('t8_d') === 'forte') flags.push("🚩 Test du saut positif (douleur forte) — exclure fracture de stress, IRM recommandée");
+    if (ENABLE_TESTS_SECTION && (getRadio('t8_g') === 'forte' || getRadio('t8_d') === 'forte')) {
+      flags.push("🚩 Test du saut positif (douleur forte) — exclure fracture de stress, IRM recommandée");
+    }
     if (getRadio('q19') === 'oui') flags.push("⚠️ Perte de poids involontaire — signe systémique à explorer");
     if (getRadio('q9') === 'blocage') flags.push("⚠️ Blocages articulaires — suspicion labrum ou corps étranger");
     if (getRadio('q9') === 'derobe') flags.push("⚠️ Dérobements — insuffisance neuromusculaire ou structure");
@@ -1181,6 +1207,12 @@
     toast.classList.add('visible');
     if (toast._timer) clearTimeout(toast._timer);
     toast._timer = setTimeout(() => toast.classList.remove('visible'), 800);
+  }
+
+  // Masquage conditionnel de la section tests
+  if (!ENABLE_TESTS_SECTION) {
+    const sec = document.getElementById('section-tests');
+    if (sec) sec.style.display = 'none';
   }
 
   // Restauration au chargement initial
