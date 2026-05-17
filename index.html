@@ -271,6 +271,44 @@
     transition: width 0.3s;
     z-index: 100;
   }
+  .save-toast {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    background: var(--success);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 99;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .save-toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .btn-danger {
+    background: white;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    margin-top: 12px;
+    font-size: 14px;
+    padding: 10px;
+    font-weight: 500;
+  }
+  .btn-danger:hover { background: var(--danger-bg); }
+  .save-info {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin: 8px 0 0;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -287,7 +325,8 @@
     <strong>Partie 1 (5 min)</strong> : questions sur ta douleur, ton ressenti, ton historique.<br>
     <strong>Partie 2 (20-30 min)</strong> : 8 tests cliniques simples. Tu peux les faire <strong>seule</strong> (avec ton téléphone qui filme pour certains) ou <strong>avec n'importe qui à côté</strong> (parent, ami, collègue) — pas besoin que ce soit Valentin.<br><br>
     À la fin, tu cliques sur <strong>"Envoyer à Valentin"</strong> : ton bilan lui arrive en notification directement. Tout reste privé.<br><br>
-    💡 <strong>À chaque question, si aucun choix ne te convient ou si tu veux préciser quelque chose, utilise le champ "Précisions / autre" en bas de chaque section.</strong>
+    💡 <strong>À chaque question, si aucun choix ne te convient ou si tu veux préciser quelque chose, utilise le champ "Précisions / autre" en bas de chaque section.</strong><br><br>
+    💾 <strong>Tes réponses sont sauvegardées automatiquement</strong> sur ton téléphone : tu peux fermer la page, changer d'onglet, revenir plus tard — tout est conservé. Quand tu cliques "Envoyer à Valentin", le brouillon reste aussi (au cas où il faudrait corriger).
   </div>
 
   <form id="form">
@@ -762,9 +801,13 @@
     <div class="actions">
       <button type="button" class="btn-primary" onclick="generateAndSend()">📤 Générer et envoyer à Valentin</button>
       <button type="button" class="btn-secondary" onclick="generateReportOnly()">👁️ Voir le récap sans envoyer</button>
+      <button type="button" class="btn-danger" onclick="clearDraft()">🗑️ Effacer toutes mes réponses (nouveau bilan)</button>
+      <p class="save-info">💾 Sauvegarde automatique active — tu peux quitter et revenir.</p>
     </div>
 
   </form>
+
+  <div id="save-toast" class="save-toast">💾 Sauvegardé</div>
 
   <div id="output">
     <h2 style="margin-top:0; color: var(--accent);">✅ Récap</h2>
@@ -802,8 +845,8 @@
     const pct = Math.round((filled.size / total.size) * 100);
     progress.style.width = pct + '%';
   }
-  form.addEventListener('input', updateProgress);
-  form.addEventListener('change', updateProgress);
+  form.addEventListener('input', () => { updateProgress(); scheduleAutoSave(); });
+  form.addEventListener('change', () => { updateProgress(); scheduleAutoSave(); });
 
   // Labels for human-readable output
   const labels = {
@@ -1036,6 +1079,122 @@
       document.getElementById('copy-status').textContent = '❌ Partage natif indisponible, utilise "Copier" à la place.';
     }
   }
+
+  // ============================================================
+  //  PERSISTANCE localStorage
+  //  Sauvegarde automatique à chaque saisie + restauration au
+  //  chargement. Permet à Anaïs de quitter / changer d'onglet
+  //  et reprendre plus tard.
+  // ============================================================
+  const STORAGE_PREFIX = 'bilan_hanche_v1_';
+  let saveTimer = null;
+
+  function saveAllFields() {
+    try {
+      const seen = new Set();
+      const inputs = form.querySelectorAll('input, textarea');
+      inputs.forEach(el => {
+        if (!el.name || seen.has(el.name)) return;
+        if (el.type === 'radio') {
+          const checked = form.querySelector(`input[name="${el.name}"]:checked`);
+          if (checked) {
+            localStorage.setItem(STORAGE_PREFIX + el.name, JSON.stringify(checked.value));
+          } else {
+            localStorage.removeItem(STORAGE_PREFIX + el.name);
+          }
+          seen.add(el.name);
+        } else if (el.type === 'checkbox') {
+          const values = Array.from(form.querySelectorAll(`input[name="${el.name}"]:checked`)).map(e => e.value);
+          if (values.length) {
+            localStorage.setItem(STORAGE_PREFIX + el.name, JSON.stringify(values));
+          } else {
+            localStorage.removeItem(STORAGE_PREFIX + el.name);
+          }
+          seen.add(el.name);
+        } else {
+          if (el.value) {
+            localStorage.setItem(STORAGE_PREFIX + el.name, JSON.stringify(el.value));
+          } else {
+            localStorage.removeItem(STORAGE_PREFIX + el.name);
+          }
+          seen.add(el.name);
+        }
+      });
+      flashToast();
+    } catch (e) {
+      console.warn('Erreur de sauvegarde localStorage', e);
+    }
+  }
+
+  function scheduleAutoSave() {
+    // Debounce à 400 ms pour ne pas saturer pendant la saisie de texte
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveAllFields, 400);
+  }
+
+  function restoreAllFields() {
+    try {
+      const seen = new Set();
+      const inputs = form.querySelectorAll('input, textarea');
+      inputs.forEach(el => {
+        if (!el.name || seen.has(el.name)) return;
+        const raw = localStorage.getItem(STORAGE_PREFIX + el.name);
+        if (raw === null) return;
+        let saved;
+        try { saved = JSON.parse(raw); } catch (e) { return; }
+
+        if (el.type === 'radio') {
+          const target = form.querySelector(`input[name="${el.name}"][value="${saved}"]`);
+          if (target) target.checked = true;
+          seen.add(el.name);
+        } else if (el.type === 'checkbox') {
+          (Array.isArray(saved) ? saved : []).forEach(v => {
+            const target = form.querySelector(`input[name="${el.name}"][value="${v}"]`);
+            if (target) target.checked = true;
+          });
+          seen.add(el.name);
+        } else {
+          el.value = saved;
+          seen.add(el.name);
+        }
+      });
+    } catch (e) {
+      console.warn('Erreur de restauration localStorage', e);
+    }
+  }
+
+  function clearDraft() {
+    const ok = confirm(
+      "Effacer toutes tes réponses pour repartir d'un bilan vide ?\n\n" +
+      "(Si tu veux juste corriger une réponse, clique 'Annuler' et modifie-la directement.)"
+    );
+    if (!ok) return;
+    Object.keys(localStorage)
+      .filter(k => k.startsWith(STORAGE_PREFIX))
+      .forEach(k => localStorage.removeItem(k));
+    location.reload();
+  }
+
+  function flashToast() {
+    const toast = document.getElementById('save-toast');
+    if (!toast) return;
+    toast.classList.add('visible');
+    if (toast._timer) clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => toast.classList.remove('visible'), 800);
+  }
+
+  // Restauration au chargement initial
+  // Le script est en fin de <body>, donc le DOM est déjà parsé : appel direct.
+  restoreAllFields();
+  updateProgress();
+
+  // Sauvegarde de sécurité avant fermeture (au cas où le debounce ne s'est pas exécuté)
+  window.addEventListener('beforeunload', () => {
+    if (saveTimer) {
+      clearTimeout(saveTimer);
+      saveAllFields();
+    }
+  });
 </script>
 </body>
 </html>
